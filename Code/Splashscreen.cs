@@ -9,11 +9,13 @@ namespace BattleCityTanks
     public static Texture2D Background { get; set; }
     public static Texture2D Tank { get; set; }
     //   public static int Multiplication { get; set; }
+    private const int xOffsetOfCursor = 64;
+    private const int yOffsetOfCursor = 123;
     static int yPositionOfBackground = 128;
     static private int repeats = 0;
     static private int backgroundWidth;// = Background.Bounds.Width;
     static private int backgroundHeight;// = Background.Bounds.Height;
-    static private bool isMove = true;
+    static public bool isMove = true;
     private enum menuItems : byte
     {
       OnePlayer = 0,
@@ -29,7 +31,9 @@ namespace BattleCityTanks
       Down
     }
 
-    static private FrameOfTank currentFrame;
+    static private FrameOfTank currentFrame = FrameOfTank.RightFirstFrame;
+
+    static public bool keyUpIsPressed = false, keyDownIsPressed = false, keyEnterIsPressed = false;
 
     static public void MeasureSizeOfTexture()
     {
@@ -46,7 +50,7 @@ namespace BattleCityTanks
       if (isMove == false)
       {
         //        spriteBatch.Draw(Tank, new Rectangle(new Point(50, 50 + (byte)currentItem), new Point(16 * multiplication, 16 * multiplication)), Color.White);
-        spriteBatch.Draw(Tank, new Rectangle(64 * multiplication, ( 122 + (byte)currentItem ) * multiplication, 16 * multiplication, 16 * multiplication), new Rectangle((int)FrameOfTank.RightFirstFrame, 0, 16, 16), Color.White);
+        spriteBatch.Draw(Tank, new Rectangle(xOffsetOfCursor * multiplication, ( yOffsetOfCursor + (byte)currentItem ) * multiplication, 16 * multiplication, 16 * multiplication), new Rectangle((int)currentFrame, 0, 16, 16), Color.White);
       }
     }
 
@@ -64,10 +68,26 @@ namespace BattleCityTanks
           isMove = false;
         }
         //        repeats = 0;
-      }
-      else
+      } else
       {
-        if (repeats % 50 == 0) { }
+        yPositionOfBackground = 0;
+        if (repeats % 5 == 0)
+        {
+          switch (currentFrame)
+          {
+            case FrameOfTank.RightFirstFrame:
+              currentFrame = FrameOfTank.RightSecondFrame;
+              break;
+
+            case FrameOfTank.RightSecondFrame:
+              currentFrame = FrameOfTank.RightFirstFrame;
+              break;
+
+            default:
+              currentFrame = FrameOfTank.RightFirstFrame;
+              break;
+          }
+        }
       }
     }
 
@@ -110,19 +130,36 @@ namespace BattleCityTanks
           break;
       }
     }
-    static public Statement SelectItem()
+
+    static public Statement SelectItem(Statement statement)
     {
-      Statement statement = Statement.Game;
-      switch (currentItem)
+      if (isMove == true)
       {
-        case menuItems.OnePlayer:
-          statement = Statement.Game;
-          break;
+        isMove = false;
+//        return statement;
+      } else
+      {
+ //       Statement statement = Statement.Game;
+        switch (currentItem)
+        {
+          case menuItems.OnePlayer:
+            statement = Statement.Game;
+            break;
 
-        default:
+          case menuItems.TwoPlayer:
 
-          break;
+            break;
+
+          case menuItems.Constructor:
+
+            break;
+
+          default:
+
+            break;
+        }
       }
+      
       return statement;
     }
   }

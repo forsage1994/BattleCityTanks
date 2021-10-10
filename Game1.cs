@@ -49,7 +49,7 @@ namespace BattleCityTanks
     const int OriginalWidth = 256, OriginalHeight = 224;
     public int CurrentWidth, CurrentHeight, Multiplication;
     public Statement statement = Statement.Splashscreen;
-
+//    public bool keyUpIsPressed = false;
 
 
     public Game1()
@@ -92,12 +92,42 @@ namespace BattleCityTanks
     {
       if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
         Exit();
-
+     
       switch (statement)
       {
         case Statement.Splashscreen:
 
-          if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Up))
+          
+          
+          if (Keyboard.GetState().IsKeyDown(Keys.Up) && Splashscreen.keyUpIsPressed == false)
+          {
+            Splashscreen.ChangeItem(Splashscreen.menuItemsChangeDirection.Up);
+            Splashscreen.keyUpIsPressed = true;
+          } else if (Keyboard.GetState().IsKeyUp(Keys.Up) && Splashscreen.keyUpIsPressed == true)
+          {
+            Splashscreen.keyUpIsPressed = false;
+          }
+
+          if (Keyboard.GetState().IsKeyDown(Keys.Down) && Splashscreen.keyDownIsPressed == false)
+          {
+            Splashscreen.ChangeItem(Splashscreen.menuItemsChangeDirection.Down);
+            Splashscreen.keyDownIsPressed = true;
+          }
+          else if (Keyboard.GetState().IsKeyUp(Keys.Down) && Splashscreen.keyDownIsPressed == true)
+          {
+            Splashscreen.keyDownIsPressed = false;
+          }
+
+          if (Keyboard.GetState().IsKeyDown(Keys.Enter) && Splashscreen.keyEnterIsPressed == false)
+          {
+            statement = Splashscreen.SelectItem(statement);
+            Splashscreen.keyEnterIsPressed = true;
+          }
+          else if (Keyboard.GetState().IsKeyUp(Keys.Enter) && Splashscreen.keyEnterIsPressed == true)
+          {
+            Splashscreen.keyEnterIsPressed = false;
+          }
+          /*if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Up))
           {
             Splashscreen.ChangeItem(Splashscreen.menuItemsChangeDirection.Up);
           }
@@ -109,8 +139,8 @@ namespace BattleCityTanks
 
           if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Enter))
           {
-            statement = Splashscreen.SelectItem();
-          }
+            statement = Splashscreen.SelectItem(statement);
+          }*/
 
           break;
 
